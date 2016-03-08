@@ -9,17 +9,17 @@ Android Debug View
 Download
 --------
 
-Download [the latest AAR](www.google.fr) or grab via Maven:
+[ ![Download](https://api.bintray.com/packages/rbonaventure/maven/simple-view/images/download.svg) ](https://bintray.com/rbonaventure/maven/simple-view/_latestVersion) or grab via Maven:
 ```xml
 <dependency>
   <groupId>com.rbonaventure.debug</groupId>
-  <artifactId>view</artifactId>
+  <artifactId>library</artifactId>
   <version>0.0.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.rbonaventure.debug:view:0.0.1'
+compile 'com.rbonaventure.debug:library:0.0.1'
 ```
 
 ## License
