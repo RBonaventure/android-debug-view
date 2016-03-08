@@ -10,16 +10,17 @@ Download
 --------
 
 [ ![Download](https://api.bintray.com/packages/rbonaventure/maven/simple-view/images/download.svg) ](https://bintray.com/rbonaventure/maven/simple-view/_latestVersion) or grab via Maven:
+
 ```xml
 <dependency>
   <groupId>com.rbonaventure.debug</groupId>
-  <artifactId>library</artifactId>
+  <artifactId>simple-view</artifactId>
   <version>0.0.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.rbonaventure.debug:library:0.0.1'
+compile 'com.rbonaventure.debug:simple-view:0.0.1'
 ```
 
 ## License
