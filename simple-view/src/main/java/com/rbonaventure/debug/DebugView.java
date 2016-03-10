@@ -126,8 +126,8 @@ public class DebugView extends TextView {
 
     /**
      * Prevent the text from being changed
-     * @attr ref android.R.styleable#TextView_text
-     * @attr ref android.R.styleable#TextView_bufferType
+     * text ref android.R.styleable#TextView_text
+     * type ref android.R.styleable#TextView_bufferType
      */
     @Override
     public void setText(CharSequence text, BufferType type) {
