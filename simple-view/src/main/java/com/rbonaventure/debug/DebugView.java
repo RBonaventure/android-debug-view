@@ -3,50 +3,102 @@ package com.rbonaventure.debug;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.Nullable;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
+/**
+ *  DebugView implementation.
+ *  Show a custom view to help you debug your application.
+ */
 public class DebugView extends TextView {
 
     private static final String TAG = "DebugView";
 
+    private boolean mTextInitialized = false;
+    private boolean mBackgroundInitialized = false;
+
     public DebugView(Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public DebugView(Context context, @Nullable AttributeSet attrs) {
+    public DebugView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         Object debuggable = getBuildConfigValue(context, "DEBUG");
 
+        /**
+         * Only show the view if the application is debuggable
+         */
         if (debuggable != null && (boolean) debuggable) {
-            String versionName = "";
-            int versionCode = 0;
-
-            try {
-                PackageManager manager = context.getPackageManager();
-                PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-                versionName = info.versionName;
-                versionCode = info.versionCode;
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.d(TAG, e.getMessage());
-            }
-
-            String version = versionName + " (" + versionCode + ")";
-
-            String text = context.getString(R.string.density);
-            text += " ";
-            text += version;
-
-            setText(text);
-            setBackgroundResource(R.drawable.border_radius);
+            initializeView(context);
         } else {
             setVisibility(GONE);
         }
+
+    }
+
+    /**
+     * Initialize the view
+     * @param context the context
+     */
+    private void initializeView(Context context) {
+        initializeText(context);
+        initializeBackground(context);
+    }
+
+    /**
+     * Set the text
+     * @param context the context
+     */
+    private void initializeText(Context context) {
+        String versionName;
+        int versionCode;
+
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            versionName = info.versionName;
+            versionCode = info.versionCode;
+            String text = String.format(context.getString(R.string.format),
+                    context.getString(R.string.density),
+                    versionName,
+                    versionCode);
+
+            setText(text);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d(TAG, e.getMessage());
+        }
+
+        mTextInitialized = true;
+    }
+
+    /**
+     * Set the background, and its color according to the android:textColor attribute
+     * @param context the context
+     */
+    private void initializeBackground(Context context) {
+        Drawable background;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            background = context.getDrawable(R.drawable.border_radius);
+        } else {
+            background = context.getResources().getDrawable(R.drawable.border_radius);
+        }
+        background.setColorFilter(new PorterDuffColorFilter(getCurrentTextColor(), PorterDuff.Mode.MULTIPLY));
+        if(Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            setBackground(background);
+        } else {
+            setBackgroundDrawable(background);
+        }
+
+        mBackgroundInitialized = true;
     }
 
     /**
@@ -71,4 +123,38 @@ public class DebugView extends TextView {
         }
         return null;
     }
+
+    /**
+     * Prevent the text from being changed
+     * @attr ref android.R.styleable#TextView_text
+     * @attr ref android.R.styleable#TextView_bufferType
+     */
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        if(!mTextInitialized) {
+            super.setText(text, type);
+        }
+    }
+
+    /**
+     * Prevent the background from being changed
+     * @param background The Drawable to use as the background, or null to remove the background
+     */
+    @Override
+    public void setBackground(Drawable background) {
+        if(!mBackgroundInitialized) {
+            super.setBackground(background);
+        }
+    }
+    /**
+     * Enforce layout params value
+     * @param params The layout parameters for this view, cannot be null
+     */
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        super.setLayoutParams(params);
+    }
+
 }

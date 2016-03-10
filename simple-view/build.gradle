@@ -44,7 +44,6 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
 }
 
 def siteUrl = 'https://github.com/rbonaventure/android-debug-view'
@@ -121,14 +120,3 @@ artifacts {
 task findConventions << {
     println project.getConvention()
 }
-
-/*publishing {
-    publications {
-        Publication(MavenPublication) {
-            artifact aar
-            groupId 'com.rbonaventure.debug'
-            artifactId 'simple-view'
-            version '0.0.1'
-        }
-    }
-}*/
