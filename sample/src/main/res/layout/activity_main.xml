@@ -4,12 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rbonaventure.debug.sample.MainActivity">
+    tools:context=".MainActivity">
 
+    <!-- text attribute has no effect -->
     <com.rbonaventure.debug.DebugView
-        android:text="Hello World!"
+        android:id="@+id/default_view"
+        android:text="test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_centerInParent="true"/>
+
+    <!-- background attribute has no effect -->
+    <com.rbonaventure.debug.DebugView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFC107"
+        android:background="#26a17e"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/default_view"/>
+
+    <!-- layout_width and layout_height attributes have no effect -->
+    <com.rbonaventure.debug.DebugView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#F44336"
+        android:text="blabla"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/default_view"/>
+
+    <com.rbonaventure.debug.DebugView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#00BCD4"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/default_view"/>
+
+    <com.rbonaventure.debug.DebugView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#009688"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/default_view"/>
 
 </RelativeLayout>
