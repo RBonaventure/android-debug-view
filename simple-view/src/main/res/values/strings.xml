@@ -1,3 +1,4 @@
 <resources>
     <string name="density">no-dpi</string>
+    <string name="format">%1$s %2$s (%3$s)</string>
 </resources>
