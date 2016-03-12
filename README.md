@@ -3,7 +3,7 @@ Android Debug View
 
 ## Sample
 
-![Sample](./images/sample.png)
+![Sample](./images/sample.png) ![AlertDialog](./images/alertdialog.png)
 
 --------
 Download
