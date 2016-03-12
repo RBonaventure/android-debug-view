@@ -1,5 +1,6 @@
 package com.rbonaventure.debug;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -18,12 +21,14 @@ import java.lang.reflect.Field;
  *  DebugView implementation.
  *  Show a custom view to help you debug your application.
  */
-public class DebugView extends TextView {
+public class DebugView extends TextView implements View.OnTouchListener {
 
     private static final String TAG = "DebugView";
 
-    private boolean mTextInitialized = false;
-    private boolean mBackgroundInitialized = false;
+    private boolean mInitialized = false;
+
+    private Context mContext;
+    private AlertDialog mAlertDialog;
 
     public DebugView(Context context) {
         this(context, null);
@@ -31,6 +36,16 @@ public class DebugView extends TextView {
 
     public DebugView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        if(mInitialized)
+            return;
+
+        mContext = context;
+
+        mAlertDialog = new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.debug)
+                            .setMessage(DeviceInfo.getInstance(context).toString())
+                            .create();
 
         Object debuggable = getBuildConfigValue(context, "DEBUG");
 
@@ -41,8 +56,10 @@ public class DebugView extends TextView {
             initializeView(context);
         } else {
             setVisibility(GONE);
+            setEnabled(false);
         }
 
+        mInitialized = true;
     }
 
     /**
@@ -52,36 +69,32 @@ public class DebugView extends TextView {
     private void initializeView(Context context) {
         initializeText(context);
         initializeBackground(context);
+        setOnTouchListener(this);
     }
 
     /**
-     * Set the text
+     * Set the text of the view
      * @param context the context
      */
     private void initializeText(Context context) {
-        String versionName;
-        int versionCode;
 
         try {
             PackageManager manager = context.getPackageManager();
             PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-            versionName = info.versionName;
-            versionCode = info.versionCode;
-            String text = String.format(context.getString(R.string.format),
+            String text = String.format(context.getString(R.string.text_format),
                     context.getString(R.string.density),
-                    versionName,
-                    versionCode);
+                    info.versionName,
+                    info.versionCode);
 
             setText(text);
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(TAG, e.getMessage());
         }
 
-        mTextInitialized = true;
     }
 
     /**
-     * Set the background, and its color according to the android:textColor attribute
+     * Set the background of the view, and its color according to the android:textColor attribute
      * @param context the context
      */
     private void initializeBackground(Context context) {
@@ -98,7 +111,6 @@ public class DebugView extends TextView {
             setBackgroundDrawable(background);
         }
 
-        mBackgroundInitialized = true;
     }
 
     /**
@@ -131,7 +143,7 @@ public class DebugView extends TextView {
      */
     @Override
     public void setText(CharSequence text, BufferType type) {
-        if(!mTextInitialized) {
+        if(!mInitialized) {
             super.setText(text, type);
         }
     }
@@ -142,10 +154,21 @@ public class DebugView extends TextView {
      */
     @Override
     public void setBackground(Drawable background) {
-        if(!mBackgroundInitialized) {
+        if(!mInitialized) {
             super.setBackground(background);
         }
     }
+
+    /**
+     * Prevent the visibility from being changed
+     * @param visibility the visibility
+     */
+    @Override
+    public void setVisibility(int visibility) {
+        if(!mInitialized)
+            super.setVisibility(visibility);
+    }
+
     /**
      * Enforce layout params value
      * @param params The layout parameters for this view, cannot be null
@@ -157,4 +180,15 @@ public class DebugView extends TextView {
         super.setLayoutParams(params);
     }
 
+    /**
+     * Display an Alert Dialog showing the device information
+     * @param v the view being touched
+     * @param event the touch event
+     * @return true because the event is consumed
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        mAlertDialog.show();
+        return true;
+    }
 }
