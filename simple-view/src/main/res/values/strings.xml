@@ -1,4 +1,10 @@
 <resources>
     <string name="density">no-dpi</string>
-    <string name="format">%1$s %2$s (%3$s)</string>
+    <string name="text_format">%1$s %2$s (%3$s)</string>
+    <string name="device_info_format">
+        %1$s %2$s %3$s\n
+        %4$s - %5$sdpi\n
+        Android %6$s - API %7$s\n
+        Langague %8$s</string>
+    <string name="debug">Debug</string>
 </resources>
