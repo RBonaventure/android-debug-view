@@ -1,6 +1,8 @@
 Android Debug View
 ==================
 
+A simple view that helps you debug your app at runtime.
+
 ## Sample
 
 ![Sample](./images/sample.png) ![AlertDialog](./images/alertdialog.png)

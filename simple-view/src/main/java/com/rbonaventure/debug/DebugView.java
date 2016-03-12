@@ -20,14 +20,14 @@ import java.lang.reflect.Field;
 /**
  *  DebugView implementation.
  *  Show a custom view to help you debug your application.
+ *
+ *  Created by rbonaventure on 3/7/2016.
  */
 public class DebugView extends TextView implements View.OnTouchListener {
 
     private static final String TAG = "DebugView";
 
     private boolean mInitialized = false;
-
-    private Context mContext;
     private AlertDialog mAlertDialog;
 
     public DebugView(Context context) {
@@ -40,13 +40,6 @@ public class DebugView extends TextView implements View.OnTouchListener {
         if(mInitialized)
             return;
 
-        mContext = context;
-
-        mAlertDialog = new AlertDialog.Builder(mContext)
-                            .setTitle(R.string.debug)
-                            .setMessage(DeviceInfo.getInstance(context).toString())
-                            .create();
-
         Object debuggable = getBuildConfigValue(context, "DEBUG");
 
         /**
@@ -56,7 +49,6 @@ public class DebugView extends TextView implements View.OnTouchListener {
             initializeView(context);
         } else {
             setVisibility(GONE);
-            setEnabled(false);
         }
 
         mInitialized = true;
@@ -67,6 +59,12 @@ public class DebugView extends TextView implements View.OnTouchListener {
      * @param context the context
      */
     private void initializeView(Context context) {
+
+        mAlertDialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.debug)
+                .setMessage(DeviceInfo.getInstance(context).toString())
+                .create();
+
         initializeText(context);
         initializeBackground(context);
         setOnTouchListener(this);
@@ -121,7 +119,7 @@ public class DebugView extends TextView implements View.OnTouchListener {
      * @param fieldName The name of the field-to-access
      * @return The value of the field, or {@code null} if the field is not found.
      */
-    public static Object getBuildConfigValue(Context context, String fieldName) {
+    private Object getBuildConfigValue(Context context, String fieldName) {
         try {
             Class<?> clazz = Class.forName(context.getPackageName() + ".BuildConfig");
             Field field = clazz.getField(fieldName);
@@ -138,8 +136,8 @@ public class DebugView extends TextView implements View.OnTouchListener {
 
     /**
      * Prevent the text from being changed
-     * text ref android.R.styleable#TextView_text
-     * type ref android.R.styleable#TextView_bufferType
+     * @param text ref android.R.styleable#TextView_text
+     * @param type ref android.R.styleable#TextView_bufferType
      */
     @Override
     public void setText(CharSequence text, BufferType type) {
@@ -191,4 +189,5 @@ public class DebugView extends TextView implements View.OnTouchListener {
         mAlertDialog.show();
         return true;
     }
+
 }
