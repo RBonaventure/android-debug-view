@@ -1,5 +1,6 @@
 package com.rbonaventure.debug;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -95,6 +96,7 @@ public class DebugView extends TextView implements View.OnTouchListener {
      * Set the background of the view, and its color according to the android:textColor attribute
      * @param context the context
      */
+    @SuppressLint("Deprecation")
     private void initializeBackground(Context context) {
         Drawable background;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

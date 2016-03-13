@@ -65,7 +65,7 @@ public class DeviceInfo {
 
     /**
      * Generate a set of information about the device.
-     * @param context
+     * @param context the context
      * @return the DeviceInfo object filled with in
      */
     public static DeviceInfo getInstance(Context context) {
@@ -119,7 +119,7 @@ public class DeviceInfo {
 
     /**
      * Get all the DeviceInfo as a String
-     * @return
+     * @return the device information as a formatted String
      */
     public String toString() {
         return String.format(mFormat,
