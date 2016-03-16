@@ -3,6 +3,7 @@ package com.rbonaventure.debug;
 import android.content.Context;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import java.lang.reflect.Field;
@@ -12,6 +13,8 @@ import java.util.Locale;
  * Created by rbonaventure on 3/11/2016.
  */
 public class DeviceInfo {
+
+    private static final String TAG = "DeviceInfo";
 
     /**
      * The name of the device.
@@ -90,7 +93,7 @@ public class DeviceInfo {
             try {
                 fieldValue = field.getInt(new Object());
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d(TAG, e.getMessage());
             }
 
             if (fieldValue == Build.VERSION.SDK_INT) {
