@@ -6,12 +6,15 @@ import android.os.Build;
 
 import com.rbonaventure.debug.DebugView;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.internal.Shadow;
 import org.robolectric.shadows.ShadowAlertDialog;
 
 import static org.assertj.android.api.Assertions.assertThat;
@@ -31,6 +34,21 @@ public class DebugViewTest {
     public void setup()  {
         mActivity = Robolectric.setupActivity(MainActivity.class);
         mDebugView = (DebugView) mActivity.findViewById(R.id.default_view);
+    }
+
+    @Test
+    public void testInflateView(){
+        assertThat(mDebugView).isNotNull();
+    }
+
+    @Test
+    public void testViewVisibility(){
+        //FiXME
+        if(BuildConfig.DEBUG) {
+            assertThat(mDebugView).isVisible();
+        } else {
+            assertThat(mDebugView).isNotVisible();
+        }
     }
 
     @Test
@@ -55,13 +73,6 @@ public class DebugViewTest {
         Drawable expectedBackground = mDebugView.getBackground();
         mDebugView.setBackground(null);
         assertThat(mDebugView).hasBackground(expectedBackground);
-    }
-
-    @Test
-    public void testOnClickDialog(){
-        mDebugView.performClick();
-        AlertDialog alertDialog = ShadowAlertDialog.getLatestAlertDialog();
-        assertThat(alertDialog).isNotNull();
     }
 
 }
