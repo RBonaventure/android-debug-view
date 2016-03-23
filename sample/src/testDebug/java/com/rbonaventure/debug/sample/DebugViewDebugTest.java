@@ -1,21 +1,17 @@
 package com.rbonaventure.debug.sample;
 
-import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.View;
 
 import com.rbonaventure.debug.DebugView;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
-import org.robolectric.internal.Shadow;
-import org.robolectric.shadows.ShadowAlertDialog;
 
 import static org.assertj.android.api.Assertions.assertThat;
 
@@ -25,7 +21,7 @@ import static org.assertj.android.api.Assertions.assertThat;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants   = BuildConfig.class,
         sdk         = Build.VERSION_CODES.LOLLIPOP)
-public class DebugViewTest {
+public class DebugViewDebugTest {
 
     MainActivity mActivity;
     DebugView mDebugView;
@@ -43,12 +39,28 @@ public class DebugViewTest {
 
     @Test
     public void testViewVisibility(){
-        //FiXME
-        if(BuildConfig.DEBUG) {
-            assertThat(mDebugView).isVisible();
-        } else {
-            assertThat(mDebugView).isNotVisible();
-        }
+        assertThat(mDebugView).isVisible();
+    }
+
+    @Test
+    public void testSetVisibility(){
+        mDebugView.setVisibility(View.VISIBLE);
+        assertThat(mDebugView).isVisible();
+        mDebugView.setVisibility(View.INVISIBLE);
+        assertThat(mDebugView).isVisible();
+        mDebugView.setVisibility(View.GONE);
+        assertThat(mDebugView).isVisible();
+    }
+
+    @Test
+    public void testViewEnabled(){
+        assertThat(mDebugView).isEnabled();
+    }
+
+    @Test
+    public void testSetEnabled(){
+        mDebugView.setEnabled(false);
+        assertThat(mDebugView).isEnabled();
     }
 
     @Test
@@ -74,5 +86,23 @@ public class DebugViewTest {
         mDebugView.setBackground(null);
         assertThat(mDebugView).hasBackground(expectedBackground);
     }
+/*
+
+    @Test
+    public void testOnClickDialog(){
+        mDebugView.performClick();
+        AlertDialog alertDialog = ShadowAlertDialog.getLatestAlertDialog();
+        assertThat(alertDialog).isNotNull();
+    }
+
+    @Test
+    public void testDialogTitle(){
+        mDebugView.performClick();
+        AlertDialog alertDialog = ShadowAlertDialog.getLatestAlertDialog();
+        assertThat(alertDialog).isNotNull();
+        ShadowAlertDialog shadowAlertDialog = Shadows.shadowOf(alertDialog);
+        Assert.assertEquals(shadowAlertDialog.getTitle(), "Debug");
+    }
+*/
 
 }

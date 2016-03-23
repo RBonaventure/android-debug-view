@@ -12,4 +12,4 @@ import org.robolectric.annotation.Config;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants   = BuildConfig.class,
         sdk         = Build.VERSION_CODES.JELLY_BEAN)
-public class DebugViewCompatTest extends DebugViewTest {}
+public class DebugViewCompatDebugTest extends DebugViewDebugTest {}
