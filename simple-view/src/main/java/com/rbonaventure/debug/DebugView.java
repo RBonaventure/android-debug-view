@@ -50,6 +50,7 @@ public class DebugView extends TextView implements View.OnTouchListener {
             initializeView(context);
         } else {
             setVisibility(GONE);
+            setEnabled(false);
         }
 
         mInitialized = true;
@@ -167,6 +168,17 @@ public class DebugView extends TextView implements View.OnTouchListener {
     public void setVisibility(int visibility) {
         if(!mInitialized)
             super.setVisibility(visibility);
+    }
+
+    /**
+     * Prevent the view from being disabled in Debug mode
+     *      and enabled in Release mode
+     * @param enabled
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(!mInitialized)
+            super.setEnabled(enabled);
     }
 
     /**
