@@ -30,6 +30,9 @@ dependencies {
         exclude module: 'support-annotations'
     }
 
+    // https://github.com/joel-costigliola/assertj-core/issues/345
+    testCompile 'org.assertj:assertj-core:1.+'
+
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':simple-view')
 }

@@ -32,23 +32,43 @@ public class DebugViewReleaseTest {
     }
 
     @Test
+    public void testInflateView(){
+        // FIXME the view shouldn't be inflated in release mode
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView is null.")
+                .isNotNull();
+    }
+
+    @Test
     public void testViewVisibility(){
-        assertThat(mDebugView).isNotVisible();
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView is visible.")
+                .isNotVisible();
     }
 
     @Test
     public void testSetVisibility(){
         mDebugView.setVisibility(View.VISIBLE);
-        assertThat(mDebugView).isGone();
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView's visibility changed.")
+                .isGone();
+
         mDebugView.setVisibility(View.INVISIBLE);
-        assertThat(mDebugView).isGone();
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView's visibility changed.")
+                .isGone();
+
         mDebugView.setVisibility(View.GONE);
-        assertThat(mDebugView).isGone();
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView's visibility changed.")
+                .isGone();
     }
 
     @Test
     public void testViewDisabled(){
-        assertThat(mDebugView).isDisabled();
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView is enabled.")
+                .isDisabled();
     }
 
     @Test
