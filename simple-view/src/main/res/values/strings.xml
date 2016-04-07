@@ -12,7 +12,7 @@
         Flavor : %2$s\n
         Build-Type : %3$s
     </string>
-    <string name="debug">Debug</string>
+    <string name="debug">Debug Information</string>
     <string name="no_flavor">No Flavor detected</string>
     <string name="no_build_type">No Build-Type detected</string>
 </resources>
