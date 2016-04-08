@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
  *
  *  Created by rbonaventure on 3/7/2016.
  */
-public class DebugView extends TextView implements View.OnTouchListener {
+public class DebugView extends TextView implements View.OnClickListener {
 
     private static final String TAG = "DebugView";
 
@@ -61,15 +61,35 @@ public class DebugView extends TextView implements View.OnTouchListener {
      * @param context the context
      */
     private void initializeView(Context context) {
+        initializeAlertDialog(context);
+        initializeText(context);
+        initializeBackground(context);
+        setOnClickListener(this);
+    }
+
+    /**
+     * Set the text of the AlertDialog
+     * @param context the context
+     */
+    private void initializeAlertDialog(Context context) {
+        Object flavor = getBuildConfigValue(context, "FLAVOR");
+        Object buildType = getBuildConfigValue(context, "BUILD_TYPE");
+
+        String mFlavor = flavor != null && !"".equals(flavor) ? (String) flavor : context.getString(R.string.no_flavor);
+        String mBuildType = buildType != null ? (String) buildType : context.getString(R.string.no_build_type);
+        String mDeviceInfo = DeviceInfo.getInstance(context).toString();
+
+        String message = String.format(
+                    context.getString(R.string.message_format),
+                    mDeviceInfo,
+                    mFlavor,
+                    mBuildType);
 
         mAlertDialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.debug)
-                .setMessage(DeviceInfo.getInstance(context).toString())
+                .setMessage(message)
+                .setIcon(R.drawable.ic_info)
                 .create();
-
-        initializeText(context);
-        initializeBackground(context);
-        setOnTouchListener(this);
     }
 
     /**
@@ -195,13 +215,9 @@ public class DebugView extends TextView implements View.OnTouchListener {
     /**
      * Display an Alert Dialog showing the device information
      * @param v the view being touched
-     * @param event the touch event
-     * @return true because the event is consumed
      */
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public void onClick(View v) {
         mAlertDialog.show();
-        return true;
     }
-
 }
