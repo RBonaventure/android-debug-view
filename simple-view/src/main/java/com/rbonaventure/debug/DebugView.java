@@ -88,8 +88,13 @@ public class DebugView extends TextView implements View.OnClickListener {
         mAlertDialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.debug)
                 .setMessage(message)
-                .setIcon(R.drawable.ic_info)
                 .create();
+
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1){
+            mAlertDialog.setIcon(R.drawable.ic_info_white);
+        } else{
+            mAlertDialog.setIcon(R.drawable.ic_info);
+        }
     }
 
     /**
