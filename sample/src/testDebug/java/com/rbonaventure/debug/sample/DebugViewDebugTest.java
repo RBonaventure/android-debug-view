@@ -3,7 +3,6 @@ package com.rbonaventure.debug.sample;
 import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 
 import com.rbonaventure.debug.DebugView;
@@ -55,17 +54,17 @@ public class DebugViewDebugTest {
     public void testSetVisibility(){
         mDebugView.setVisibility(View.VISIBLE);
         assertThat(mDebugView)
-                .overridingErrorMessage("The DebugView's visibility changed.")
+                .overridingErrorMessage("DebugView#setVisibility isn't disabled.")
                 .isVisible();
 
         mDebugView.setVisibility(View.INVISIBLE);
         assertThat(mDebugView)
-                .overridingErrorMessage("The DebugView's visibility changed.")
+                .overridingErrorMessage("DebugView#setVisibility isn't disabled.")
                 .isVisible();
 
         mDebugView.setVisibility(View.GONE);
         assertThat(mDebugView)
-                .overridingErrorMessage("The DebugView's visibility changed.")
+                .overridingErrorMessage("DebugView#setVisibility isn't disabled.")
                 .isVisible();
     }
 
@@ -80,8 +79,38 @@ public class DebugViewDebugTest {
     public void testSetEnabled(){
         mDebugView.setEnabled(false);
         assertThat(mDebugView)
-                .overridingErrorMessage("The DebugView has been disabled.")
+                .overridingErrorMessage("DebugView#setEnabled isn't disabled.")
                 .isEnabled();
+    }
+
+    @Test
+    public void testSetText(){
+        String expectedText = mDebugView.getText().toString();
+        mDebugView.setText("test");
+        assertThat(mDebugView)
+                .overridingErrorMessage("DebugView#setText isn't disabled.")
+                .hasText(expectedText);
+    }
+
+    @Test
+    public void testSetError(){
+        assertThat(mDebugView)
+                .overridingErrorMessage("The DebugView has an error at startup.")
+                .hasNoError();
+
+        mDebugView.setError("error");
+        assertThat(mDebugView)
+                .overridingErrorMessage("DebugView#setError isn't disabled.")
+                .hasNoError();
+    }
+
+    @Test
+    public void testSetBackground(){
+        Drawable expectedBackground = mDebugView.getBackground();
+        mDebugView.setBackground(null);
+        assertThat(mDebugView)
+                .overridingErrorMessage("DebugView#setBackground isn't disabled.")
+                .hasBackground(expectedBackground);
     }
 
     @Test
@@ -96,24 +125,6 @@ public class DebugViewDebugTest {
         assertThat(mDebugView)
                 .overridingErrorMessage("The DebugView's text doesn't contain the versionCode.")
                 .containsText(Integer.toString(BuildConfig.VERSION_CODE));
-    }
-
-    @Test
-    public void testSetText(){
-        String expectedText = mDebugView.getText().toString();
-        mDebugView.setText("test");
-        assertThat(mDebugView)
-                .overridingErrorMessage("The DebugView's text changed.")
-                .hasText(expectedText);
-    }
-
-    @Test
-    public void testSetBackground(){
-        Drawable expectedBackground = mDebugView.getBackground();
-        mDebugView.setBackground(null);
-        assertThat(mDebugView)
-                .overridingErrorMessage("The DebugView's Background changed.")
-                .hasBackground(expectedBackground);
     }
 
     @Test

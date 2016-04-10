@@ -1,9 +1,9 @@
 <resources>
     <string name="text_format">%1$s %2$s (%3$s)</string>
     <string name="device_info_format">
-        Device : %1$s %2$s %3$s\n
-        Display : %4$s - %5$sdpi (%6$s)\n
-        Version : Android %7$s - API %8$s\n
+        Android : %7$s - API %8$s\n
+        %1$s %2$s %3$s\n
+        %4$s - %5$sdpi (%6$s)\n
         Langage : %9$s
     </string>
     <string name="message_format">
