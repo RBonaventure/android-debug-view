@@ -5,13 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
  *
  *  Created by rbonaventure on 3/7/2016.
  */
-public class DebugView extends TextView implements View.OnTouchListener {
+public class DebugView extends TextView implements View.OnClickListener {
 
     private static final String TAG = "DebugView";
 
@@ -50,6 +50,7 @@ public class DebugView extends TextView implements View.OnTouchListener {
             initializeView(context);
         } else {
             setVisibility(GONE);
+            setEnabled(false);
         }
 
         mInitialized = true;
@@ -60,15 +61,40 @@ public class DebugView extends TextView implements View.OnTouchListener {
      * @param context the context
      */
     private void initializeView(Context context) {
+        initializeAlertDialog(context);
+        initializeText(context);
+        initializeBackground(context);
+        setOnClickListener(this);
+    }
+
+    /**
+     * Set the text of the AlertDialog
+     * @param context the context
+     */
+    private void initializeAlertDialog(Context context) {
+        Object flavor = getBuildConfigValue(context, "FLAVOR");
+        Object buildType = getBuildConfigValue(context, "BUILD_TYPE");
+
+        String mFlavor = flavor != null && !"".equals(flavor) ? (String) flavor : context.getString(R.string.no_flavor);
+        String mBuildType = buildType != null ? (String) buildType : context.getString(R.string.no_build_type);
+        String mDeviceInfo = DeviceInfo.getInstance(context).toString();
+
+        String message = String.format(
+                    context.getString(R.string.message_format),
+                    mDeviceInfo,
+                    mFlavor,
+                    mBuildType);
 
         mAlertDialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.debug)
-                .setMessage(DeviceInfo.getInstance(context).toString())
+                .setMessage(message)
                 .create();
 
-        initializeText(context);
-        initializeBackground(context);
-        setOnTouchListener(this);
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1){
+            mAlertDialog.setIcon(R.drawable.ic_info_white);
+        } else{
+            mAlertDialog.setIcon(R.drawable.ic_info);
+        }
     }
 
     /**
@@ -105,12 +131,7 @@ public class DebugView extends TextView implements View.OnTouchListener {
             background = context.getResources().getDrawable(R.drawable.border_radius);
         }
         background.setColorFilter(new PorterDuffColorFilter(getCurrentTextColor(), PorterDuff.Mode.MULTIPLY));
-        if(Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            setBackground(background);
-        } else {
-            setBackgroundDrawable(background);
-        }
-
+        setBackgroundInternal(background);
     }
 
     /**
@@ -137,6 +158,7 @@ public class DebugView extends TextView implements View.OnTouchListener {
     }
 
     /**
+     * /!\ Disabled
      * Prevent the text from being changed
      * @param text ref android.R.styleable#TextView_text
      * @param type ref android.R.styleable#TextView_bufferType
@@ -149,17 +171,61 @@ public class DebugView extends TextView implements View.OnTouchListener {
     }
 
     /**
+     * Sets the text color for all the states (normal, selected,
+     * focused) to be this color.
+     * Also change the background color accordingly.
+     * @param color the new text color
+     */
+    @Override
+    public void setTextColor(int color) {
+        super.setTextColor(color);
+        initializeBackground(getContext());
+    }
+
+    /**
+     * Sets the text color.
+     * Also change the background color accordingly.
+     * @param colors the new text colors
+     */
+    @Override
+    public void setTextColor(ColorStateList colors) {
+        super.setTextColor(colors);
+        initializeBackground(getContext());
+    }
+
+    /**
+     * /!\ Disabled
+     * Prevent errors to be set on the DebugView
+     * @param error The text of the error
+     * @param icon The icon to display
+     */
+    @Override
+    public void setError(CharSequence error, Drawable icon) {
+    }
+
+    /**
+     * /!\ Disabled
      * Prevent the background from being changed
      * @param background The Drawable to use as the background, or null to remove the background
      */
     @Override
     public void setBackground(Drawable background) {
-        if(!mInitialized) {
+    }
+
+    /**
+     * Set background from within the DebugView
+     * @param background The Drawable to use as the background, or null to remove the background
+     */
+    private void setBackgroundInternal(Drawable background) {
+        if(Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.JELLY_BEAN) {
             super.setBackground(background);
+        } else {
+            super.setBackgroundDrawable(background);
         }
     }
 
     /**
+     * /!\ Disabled
      * Prevent the visibility from being changed
      * @param visibility the visibility
      */
@@ -170,6 +236,19 @@ public class DebugView extends TextView implements View.OnTouchListener {
     }
 
     /**
+     * /!\ Disabled
+     * Prevent the view from being disabled in Debug mode
+     *      and enabled in Release mode
+     * @param enabled
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        if(!mInitialized)
+            super.setEnabled(enabled);
+    }
+
+    /**
+     * /!\ Disabled
      * Enforce layout params value
      * @param params The layout parameters for this view, cannot be null
      */
@@ -183,13 +262,9 @@ public class DebugView extends TextView implements View.OnTouchListener {
     /**
      * Display an Alert Dialog showing the device information
      * @param v the view being touched
-     * @param event the touch event
-     * @return true because the event is consumed
      */
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public void onClick(View v) {
         mAlertDialog.show();
-        return true;
     }
-
 }

@@ -3,6 +3,7 @@ package com.rbonaventure.debug;
 import android.content.Context;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import java.lang.reflect.Field;
@@ -12,6 +13,8 @@ import java.util.Locale;
  * Created by rbonaventure on 3/11/2016.
  */
 public class DeviceInfo {
+
+    private static final String TAG = "DeviceInfo";
 
     /**
      * The name of the device.
@@ -49,9 +52,14 @@ public class DeviceInfo {
     int mDensity;
 
     /**
+     * The density of the device (ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi).
+     */
+    String mAndroidDensity;
+
+    /**
      * The language of the device.
      */
-    String mLanguage = Locale.getDefault().getLanguage();
+    String mLanguage = Locale.getDefault().toString();
 
     /**
      * The sdk level oft he device.
@@ -90,7 +98,7 @@ public class DeviceInfo {
             try {
                 fieldValue = field.getInt(new Object());
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d(TAG, e.getMessage());
             }
 
             if (fieldValue == Build.VERSION.SDK_INT) {
@@ -113,6 +121,7 @@ public class DeviceInfo {
          * Get the density of the device.
          */
         deviceInfo.mDensity = dm.densityDpi;
+        deviceInfo.mAndroidDensity = context.getString(R.string.density);
 
         return deviceInfo;
     }
@@ -128,6 +137,7 @@ public class DeviceInfo {
                 format(mModel),
                 mResolution,
                 mDensity,
+                mAndroidDensity,
                 mVersion,
                 mSdk,
                 mLanguage);
@@ -140,7 +150,7 @@ public class DeviceInfo {
      */
     private String format(String text) {
         if(text != null && !text.isEmpty())
-            return text.substring(0, 1).toUpperCase() + text.substring(1);
+            return text.substring(0, 1).toUpperCase(Locale.ENGLISH) + text.substring(1);
         else
             return "";
     }

@@ -1,6 +1,8 @@
 Android Debug View
 ==================
 
+[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
+
 A simple view that helps you debug your app at runtime.
 
 ## Sample
@@ -17,12 +19,12 @@ Download
 <dependency>
   <groupId>com.rbonaventure.debug</groupId>
   <artifactId>simple-view</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.rbonaventure.debug:simple-view:0.0.3'
+compile 'com.rbonaventure.debug:simple-view:0.0.4'
 ```
 
 ## License

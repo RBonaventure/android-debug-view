@@ -4,6 +4,19 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    // Fix https://github.com/robolectric/robolectric-gradle-plugin/issues/144
+    testOptions {
+        unitTests {
+            all {
+                // configure the test JVM arguments
+                jvmArgs '-noverify'
+            }
+        }
+    }
+
+    // Fix https://github.com/robolectric/robolectric/issues/1862
+    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "com.rbonaventure.debug.sample"
         minSdkVersion 9
@@ -15,14 +28,21 @@ android {
         release {
             debuggable false
             signingConfig signingConfigs.debug
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:3.0"
+    testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
+        exclude module: 'support-annotations'
+    }
+
+    // https://github.com/joel-costigliola/assertj-core/issues/345
+    testCompile 'org.assertj:assertj-core:1.+'
+
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':simple-view')
 }
