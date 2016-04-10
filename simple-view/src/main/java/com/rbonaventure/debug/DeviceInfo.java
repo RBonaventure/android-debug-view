@@ -59,7 +59,7 @@ public class DeviceInfo {
     /**
      * The language of the device.
      */
-    String mLanguage = Locale.getDefault().getLanguage();
+    String mLanguage = Locale.getDefault().toString();
 
     /**
      * The sdk level oft he device.
