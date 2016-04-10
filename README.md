@@ -19,12 +19,12 @@ Download
 <dependency>
   <groupId>com.rbonaventure.debug</groupId>
   <artifactId>simple-view</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.rbonaventure.debug:simple-view:0.0.3'
+compile 'com.rbonaventure.debug:simple-view:0.0.4'
 ```
 
 ## License
